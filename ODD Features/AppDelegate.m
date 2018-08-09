@@ -125,9 +125,11 @@
     NSString* productName = [self.deviceArrayController valueForKeyPath:@"selectedObjects.raw.Device Characteristics.Product Name"][0];
     NSString* name = [NSString stringWithFormat:@"%@ %@", vendorName, productName];
     name = [name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-    NSString* date = [NSDateFormatter localizedStringFromDate:cached[@"date"]
-                                                    dateStyle:NSDateFormatterShortStyle
-                                                    timeStyle:NSDateFormatterMediumStyle];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    NSString* date = [dateFormatter stringFromDate:cached[@"date"]];
     self.status = [NSString stringWithFormat:@"%@. Updated on %@.", name, date];
 }
 
