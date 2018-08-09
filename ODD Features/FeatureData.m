@@ -20,7 +20,7 @@ static NSString* kFeatureNameTable[] = {
     [0x001F] = @"DVD Read",
     [0x0020] = @"Random Writable",
     [0x0021] = @"Incremental Streaming Writable",
-    [0x0022] = @"Obsolete (Sector Erasable)",
+    [0x0022] = @"Sector Erasable",
     [0x0023] = @"Formattable",
     [0x0024] = @"Hardware Defect Management",
     [0x0025] = @"Write Once",
@@ -34,6 +34,9 @@ static NSString* kFeatureNameTable[] = {
     [0x002D] = @"CD Track-at-Once",
     [0x002E] = @"CD Mastering",
     [0x002F] = @"DVD-R/-RW Write",
+    [0x0030] = @"DDCD Read",
+    [0x0031] = @"DDCD-R Write",
+    [0x0032] = @"DDCD-RW Write",
     [0x0033] = @"Layer Jump recording",
     [0x0034] = @"LJ Rigid Restricted Overwrite",
     [0x0035] = @"Stop Long Operation",
@@ -81,11 +84,11 @@ static NSString* getFeatureName(uint16_t feature) {
 }
 
 static NSString* kProfileNameTable[] = {
-    [0x0001] = @"Obsolete (Non-removable disk)",
+    [0x0001] = @"Non-removable disk",
     [0x0002] = @"Removable disk",
-    [0x0003] = @"Obsolete (MO Erasable)",
-    [0x0004] = @"Obsolete (MO Write Once)",
-    [0x0005] = @"Obsolete (AS-MO)",
+    [0x0003] = @"MO Erasable",
+    [0x0004] = @"MO Write Once",
+    [0x0005] = @"AS-MO",
     [0x0008] = @"CD-ROM",
     [0x0009] = @"CD-R",
     [0x000A] = @"CD-RW",
@@ -100,6 +103,11 @@ static NSString* kProfileNameTable[] = {
     [0x0018] = @"DVD-Download disc recording",
     [0x001A] = @"DVD+RW",
     [0x001B] = @"DVD+R",
+    [0x0020] = @"DDCD-ROM",
+    [0x0021] = @"DDCD-R",
+    [0x0022] = @"DDCD-RW",
+    [0x002A] = @"DVD+RW Dual Layer",
+    [0x002B] = @"DVD+R Double Layer",
     [0x0040] = @"BD-ROM",
     [0x0041] = @"BD-R Sequential Recording Mode (SRM)",
     [0x0042] = @"BD-R Random Recording Mode (RRM)",
@@ -395,6 +403,21 @@ static NSArray* parseFeature002F(const uint8_t* ptr, NSUInteger size) {
              @{@"key":@"DVD-RW SL",                         @"value":getFlagRepr(ptr[4] & 2)}];
 }
 
+static NSArray* parseFeature0030(const uint8_t* ptr, NSUInteger size) {
+    return nil;
+}
+
+static NSArray* parseFeature0031(const uint8_t* ptr, NSUInteger size) {
+    CheckSize(4);
+    return @[@{@"key":@"Test Write",                        @"value":getFlagRepr(ptr[4] & 4)}];
+}
+
+static NSArray* parseFeature0032(const uint8_t* ptr, NSUInteger size) {
+    CheckSize(4);
+    return @[@{@"key":@"Intermediate",                      @"value":getFlagRepr(ptr[4] & 2)},
+             @{@"key":@"Blank",                             @"value":getFlagRepr(ptr[4] & 1)}];
+}
+
 static NSArray* parseFeature0033(const uint8_t* ptr, NSUInteger size) {
     CheckSize(4);
     return @[@{@"key":@"Number of Link Sizes",              @"value":getU8Repr(ptr[7])},
@@ -643,6 +666,9 @@ static FeatureParser kFeatureParserTable[] = {
     [0x002D] = parseFeature002D,
     [0x002E] = parseFeature002E,
     [0x002F] = parseFeature002F,
+    [0x0030] = parseFeature0030,
+    [0x0031] = parseFeature0031,
+    [0x0032] = parseFeature0032,
     [0x0033] = parseFeature0033,
     [0x0034] = parseFeature0034,
     [0x0035] = parseFeature0035,
