@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -804,9 +804,24 @@
                             <action selector="refreshDevices:" target="Voe-Tx-rLC" id="076-5Q-8Bl"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="80859808-73CF-44E3-BFDD-EA53189EAC21" label="⏏ Open Tray" paletteLabel="Open Tray" tag="-1" id="Zq2-OW-AWe">
+                    <toolbarItem implicitItemIdentifier="0DD5EC04-9C18-4845-908E-5472E7A170FF" label="▷ Test AACS" paletteLabel="Test AACS" tag="-1" autovalidates="NO" id="27n-10-mZj">
+                        <connections>
+                            <action selector="runAACSAuth:" target="Voe-Tx-rLC" id="Qiu-0l-34i"/>
+                            <binding destination="k3F-o1-JKU" name="enabled" keyPath="selection.id" id="Vqj-ZO-8Qm">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="80859808-73CF-44E3-BFDD-EA53189EAC21" label="⏏ Open Tray" paletteLabel="Open Tray" tag="-1" autovalidates="NO" id="Zq2-OW-AWe">
                         <connections>
                             <action selector="deviceOpenTray:" target="Voe-Tx-rLC" id="AHa-mz-WXF"/>
+                            <binding destination="k3F-o1-JKU" name="enabled" keyPath="selection.id" id="9qU-5a-j3C">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
                         </connections>
                     </toolbarItem>
                 </allowedToolbarItems>
@@ -814,6 +829,7 @@
                     <toolbarItem reference="cTi-77-IXh"/>
                     <toolbarItem reference="rY1-f8-Yhf"/>
                     <toolbarItem reference="Wd3-od-7ON"/>
+                    <toolbarItem reference="27n-10-mZj"/>
                     <toolbarItem reference="Zq2-OW-AWe"/>
                 </defaultToolbarItems>
             </toolbar>

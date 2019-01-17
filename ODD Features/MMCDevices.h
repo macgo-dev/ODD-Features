@@ -13,5 +13,6 @@
 + (NSArray<NSDictionary*>*)devices;
 + (NSArray<NSData*>*)getConfiguration:(uint64_t)entryID;
 + (BOOL)openTray:(uint64_t)entryID;
++ (NSString*)getMediaBSDName:(uint64_t)entryID;
 
 @end

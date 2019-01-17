@@ -53,6 +53,82 @@
     [self updateFeaturesWithCache:NO];
 }
 
+- (IBAction)runAACSAuth:(id)sender {
+    NSArray* devs = [self.deviceArrayController selectedObjects];
+    if (devs.count == 0) return;
+    uint64_t node = [devs[0][@"id"] unsignedLongLongValue];
+    if (!node) return;
+
+    BOOL __block isBD = NO, isAACS = NO;
+    [self updateFeaturesWithCache:NO];
+    [self.features enumerateObjectsUsingBlock:^(NSDictionary *feature, NSUInteger idx, BOOL *stop) {
+        if ([feature[@"current"] isEqual: @"Yes"]) {
+            switch ([feature[@"id"] integerValue]) {
+                case 0x40:
+                    isBD = YES;
+                    break;
+                case 0x10D:
+                    isAACS = YES;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }];
+
+    NSString* name = [MMCDevices getMediaBSDName:node];
+
+    if (!isBD || !isAACS || !name) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = @"Please insert an AACS protected\nBlu-ray disc.";
+        [alert beginSheetModalForWindow:self.window modalDelegate:nil didEndSelector:nil contextInfo:nil];
+        return;
+    }
+
+    NSAlert *aacsPanel = [[NSAlert alloc] init];
+    aacsPanel.messageText = [NSString stringWithFormat:@"Running AACS Authentication on “%@“", name];
+    aacsPanel.informativeText = @"Please wait...";
+    [aacsPanel addButtonWithTitle:@"Done"].enabled = NO;
+
+    [aacsPanel beginSheetModalForWindow:self.window modalDelegate:nil didEndSelector:nil contextInfo:nil];
+
+    @try {
+        NSPipe *pipe = [NSPipe pipe];
+        NSFileHandle *file = pipe.fileHandleForReading;
+
+        NSTask *task = [[NSTask alloc] init];
+        task.launchPath = [[NSBundle mainBundle] pathForResource:@"aacs-auth" ofType:@""];
+        NSMutableArray* args = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"aacs-auth" ofType:@"plist"]];
+        [args addObject:name];
+        task.arguments = args;
+        task.standardOutput = pipe;
+        task.standardError = pipe;
+        task.terminationHandler = ^(NSTask* task) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                NSData *data = [file readDataToEndOfFile];
+                [file closeFile];
+
+                if (task.terminationStatus) {
+                    aacsPanel.messageText = [NSString stringWithFormat:@"AACS Authentication Failed on “%@“", name];
+                } else {
+                    aacsPanel.messageText = [NSString stringWithFormat:@"AACS Authentication Succeded on “%@“", name];
+                }
+                NSString *output = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+                aacsPanel.informativeText = output;
+                aacsPanel.buttons[0].enabled = YES;
+                [aacsPanel layout];
+            });
+        };
+
+        [task launch];
+
+    } @catch (NSException *e) {
+        aacsPanel.informativeText = [NSString stringWithFormat:@"An unexpected exception occurred.\n\n%@\n%@", e.name, e.reason];
+        aacsPanel.buttons[0].enabled = YES;
+        [aacsPanel layout];
+    }
+}
+
 - (IBAction)deviceOpenTray:(id)sender {
     NSArray* devs = [self.deviceArrayController selectedObjects];
     if (devs.count == 0) return;

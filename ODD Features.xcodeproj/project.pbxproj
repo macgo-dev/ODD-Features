@@ -97,6 +97,7 @@
 				E148BC0521185E3000DA53FF /* Sources */,
 				E148BC0621185E3000DA53FF /* Frameworks */,
 				E148BC0721185E3000DA53FF /* Resources */,
+				E1E748F321F0E107007CBD52 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -155,6 +156,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E1E748F321F0E107007CBD52 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -e \"${SRCROOT}/ODD Features/Resources/aacs-auth\" ]; then\n  cp \"${SRCROOT}/ODD Features/Resources/aacs-auth\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/aacs-auth\"\nfi \nif [ -e \"${SRCROOT}/ODD Features/Resources/aacs-auth.plist\" ]; then\n  cp \"${SRCROOT}/ODD Features/Resources/aacs-auth.plist\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/aacs-auth.plist\"\nfi \n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E148BC0521185E3000DA53FF /* Sources */ = {

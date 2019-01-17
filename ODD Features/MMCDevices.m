@@ -158,4 +158,33 @@ static kern_return_t runWithMMC(uint64_t entryID, kern_return_t (^callback)(MMCD
     return ret;
 }
 
++ (NSString*)getMediaBSDName:(uint64_t)entryID {
+    CFMutableDictionaryRef matchingDict = IORegistryEntryIDMatching(entryID);
+    if (!matchingDict) {
+        return nil;
+    }
+
+    io_iterator_t deviceIterator;
+    kern_return_t rc;
+
+    rc = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &deviceIterator);
+    if (kIOReturnSuccess != rc) {
+        return nil;
+    }
+
+    io_service_t service = IOIteratorNext(deviceIterator);
+    IOObjectRelease(deviceIterator);
+
+    if (!service) {
+        return nil;
+    }
+
+    NSString *name = nil;
+
+    CFStringRef n = IORegistryEntrySearchCFProperty(service, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively);
+    name = (__bridge_transfer NSString*)n;
+
+    IOObjectRelease(service);
+    return name;
+}
 @end
