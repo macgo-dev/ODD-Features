@@ -90,6 +90,8 @@ static kern_return_t runWithMMC(uint64_t entryID, kern_return_t (^callback)(MMCD
         }
         IODestroyPlugInInterface(plugInInterface);
     }
+
+    IOObjectRelease(service);
     return rc;
 }
 
